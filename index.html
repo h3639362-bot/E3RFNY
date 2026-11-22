@@ -3,314 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E3RFNY - اعرف مين يعرفك</title>
+<title>E3RFNY | اعرفني</title>
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#100d1c;color:#fff;
+ font-family:Arial,sans-serif;padding:20px;
 }
-body {
-    font-family: Arial, sans-serif;
-    background: #101124;
-    color: white;
-    min-height: 100vh;
+.container{max-width:700px;margin:30px auto}
+.card{
+ background:#1d1830;border:1px solid #393052;
+ border-radius:18px;padding:22px;margin-bottom:18px;
 }
-header {
-    padding: 25px 8%;
-    border-bottom: 1px solid #292941;
+h1{text-align:center;color:#c6a7ff}
+h2{color:#d8c5ff}
+input,textarea,button{
+ width:100%;padding:13px;margin:8px 0;
+ border-radius:10px;border:1px solid #554773;
+ font-size:16px;
 }
-.logo {
-    color: #a18cff;
-    font-size: 30px;
-    font-weight: bold;
+input,textarea{background:#110e1c;color:white}
+button{
+ background:#8055c9;color:white;border:0;
+ cursor:pointer;font-weight:bold;
 }
-.container {
-    max-width: 700px;
-    margin: 65px auto;
-    padding: 25px;
-}
-h1 {
-    text-align: center;
-    font-size: 38px;
-    margin-bottom: 15px;
-}
-.description {
-    text-align: center;
-    color: #aaaac0;
-    margin-bottom: 35px;
-    line-height: 1.8;
-}
-.card {
-    background: #1c1d35;
-    border: 1px solid #333451;
-    border-radius: 18px;
-    padding: 25px;
-}
-label {
-    display: block;
-    margin: 18px 0 10px;
-}
-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #454564;
-    background: #111225;
-    color: white;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-button {
-    border: none;
-    background: #8065ff;
-    color: white;
-    padding: 14px 22px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 18px;
-}
-button:hover {
-    background: #684ce8;
-}
-.question {
-    border-top: 1px solid #393953;
-    margin-top: 25px;
-    padding-top: 15px;
-}
-.preview {
-    display: none;
-    margin-top: 25px;
-    padding: 20px;
-    background: #292443;
-    border-radius: 12px;
-    line-height: 2;
-}
- .small-note {
-    color: #c4c2d8;
-    font-size: 13px;
-    line-height: 1.8;
-    margin-top: 14px;
-}
-.footer {
-    text-align: center;
-    color: #777;
-    padding: 30px;
-}
+button.secondary{background:#39304e}
+.option{display:flex;gap:8px;align-items:center}
+.option input{width:auto}
+.question{border-top:1px solid #44395b;padding-top:15px;margin-top:15px}
+.small{color:#c2b8d3;font-size:14px}
+.hidden{display:none}
+.result{background:#29213d;padding:12px;border-radius:10px;margin:10px 0}
 </style>
 </head>
 <body>
+<div class="container">
+ <div class="card">
+  <h1>اعرفني E3RFNY</h1>
+  <p class="small" style="text-align:center">اعمل اختبار عن نفسك وشارك الرابط مع أصحابك!</p>
+ </div>
 
-<header>
-    <div class="logo">E3RFNY</div>
-</header>
-
-<main class="container">
-    <h1>مين يعرفك <span style="color:#a18cff">بجد؟</span></h1>
-
-    <p class="description">
-        أنشئ اختبارك الخاص واختبر أصحابك!
-        <br>
-        وشوف مين أكتر شخص فاهمك.
-    </p>
-
-    <div class="card">
-        <label>اسمك:</label>
-        <input id="username" placeholder="اكتب اسمك هنا">
-
-        <div id="questions"></div>
-
-        <button onclick="addQuestion()">+ إضافة سؤال</button>
-        <button onclick="createQuiz()">إنشاء الاختبار 🚀</button>
-
-        <div class="preview" id="preview"></div>
-    </div>
-</main>
-
-<div class="footer">© 2026 E3RFNY</div>
+ <main id="app"></main>
+</div>
 
 <script>
-let questionCount = 0;
-let currentQuiz = null;
+const SUPABASE_URL = "https://qtyrenrlbmofnrhavhyu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_YmSzfTvDMu5nry5KUXgQDA_kYfDJSDL";
 
-function addQuestion() {
-    questionCount++;
+const app = document.getElementById("app");
 
-    const div = document.createElement("div");
-    div.className = "question";
-
-    div.innerHTML = `
-        <label>السؤال رقم ${questionCount}:</label>
-        <input class="q-text" placeholder="اكتب سؤالك">
-        <input class="option" placeholder="الاختيار الأول">
-        <input class="option" placeholder="الاختيار الثاني">
-        <input class="option" placeholder="الاختيار الثالث">
-        <input class="option" placeholder="الاختيار الرابع">
-        <label>رقم الإجابة الصحيحة (من 1 إلى 4):</label>
-        <input class="correct" type="number" min="1" max="4" placeholder="مثلاً 2">
-    `;
-
-    document.getElementById("questions").appendChild(div);
+async function rpc(name, params){
+ const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{
+  method:"POST",
+  headers:{
+   "Content-Type":"application/json",
+   "apikey":SUPABASE_KEY,
+   "Authorization":`Bearer ${SUPABASE_KEY}`
+  },
+  body:JSON.stringify(params)
+ });
+ const data = await response.json();
+ if(!response.ok) throw new Error(data.message || data.error || "حصل خطأ في الاتصال");
+ return data;
 }
 
-function createQuiz() {
-    const name = document.getElementById("username").value.trim();
+let questions=[];
 
-    if (!name) {
-        alert("اكتب اسمك الأول!");
-        return;
-    }
-
-    const questionElements = [...document.querySelectorAll(".question")];
-    if (questionElements.length === 0) {
-        alert("أضف سؤالاً واحداً على الأقل!");
-        return;
-    }
-
-    const quizQuestions = [];
-
-    for (const q of questionElements) {
-        const title = q.querySelector(".q-text").value.trim();
-        const options = [...q.querySelectorAll(".option")].map(x => x.value.trim());
-        const correct = Number(q.querySelector(".correct").value);
-
-        if (!title || options.some(x => !x) || ![1, 2, 3, 4].includes(correct)) {
-            alert("أكمل السؤال والاختيارات وحدد الإجابة الصحيحة.");
-            return;
-        }
-
-        quizQuestions.push({ title, options, correct });
-    }
-
-    currentQuiz = { name, questions: quizQuestions };
-    showSharePreview();
+function home(){
+ app.innerHTML=`
+ <div class="card">
+  <h2>اعمل اختبارك 🎯</h2>
+  <label>اسمك</label>
+  <input id="ownerName" placeholder="اكتب اسمك">
+  <div id="questions"></div>
+  <button onclick="addQuestion()">+ إضافة سؤال</button>
+  <button onclick="createQuiz()">إنشاء الاختبار ومشاركة الرابط</button>
+  <p id="message" class="small"></p>
+ </div>
+ <div class="card">
+  <h2>اختباراتي</h2>
+  <div id="myQuizzes"></div>
+ </div>`;
+ questions=[];
+ addQuestion();
+ showMyQuizzes();
 }
 
-function showSharePreview() {
-    const preview = document.getElementById("preview");
-    preview.style.display = "block";
-    preview.innerHTML = `
-        <h2>اختبار ${escapeHtml(currentQuiz.name)}</h2>
-        <p>تم إنشاء اختبارك بنجاح! 🎉</p>
-        <p>اضغط على زر مشاركة الرابط وابعته لأصحابك علشان يجاوبوا.</p>
-        <button type="button" onclick="shareQuiz()">مشاركة رابط الاختبار 🔗</button>
-        <p id="shareStatus" aria-live="polite"></p>
-        <p class="small-note">مهم: لازم ترفع ملف الموقع على استضافة وتستخدم رابط الموقع المنشور، علشان أصحابك يقدروا يفتحوا الاختبار. الإجابات لن تصل إليك تلقائياً؛ استقبال إجابات الأصدقاء يحتاج قاعدة بيانات أو خدمة خلفية.</p>
-    `;
-    preview.scrollIntoView({ behavior: "smooth" });
+function addQuestion(){
+ const id=questions.length;
+ questions.push({title:"",options:["","","",""],correct:0});
+ const div=document.createElement("div");
+ div.className="question";
+ div.id="q"+id;
+ div.innerHTML=`
+  <h3>السؤال ${id+1}</h3>
+  <input placeholder="اكتب السؤال" oninput="questions[${id}].title=this.value">
+  ${[0,1,2,3].map(i=>`
+   <div class="option">
+    <input placeholder="الاختيار ${i+1}" oninput="questions[${id}].options[${i}]=this.value">
+   </div>`).join("")}
+  <label>الإجابة الصحيحة</label>
+  <select onchange="questions[${id}].correct=Number(this.value)">
+   <option value="0">الاختيار الأول</option>
+   <option value="1">الاختيار الثاني</option>
+   <option value="2">الاختيار الثالث</option>
+   <option value="3">الاختيار الرابع</option>
+  </select>`;
+ document.getElementById("questions").appendChild(div);
 }
 
-function shareQuiz() {
-    if (!currentQuiz) return;
+async function createQuiz(){
+ try{
+  const title=document.getElementById("ownerName").value.trim();
+  if(!title) return alert("اكتب اسمك الأول");
+  if(questions.length===0) return alert("أضف سؤالًا");
+  for(const q of questions){
+   if(!q.title.trim() || q.options.some(x=>!x.trim()))
+    return alert("اكمل السؤال وكل الاختيارات");
+  }
 
-    // The quiz data is encoded in the URL so the recipient can open the quiz.
-    const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(currentQuiz)))));
-    const shareUrl = `${location.origin}${location.pathname}#quiz=${encoded}`;
+  const token=crypto.randomUUID();
+  const id=await rpc("create_quiz",{
+   p_title:title,
+   p_questions:questions,
+   p_owner_token:token
+  });
 
-    if (navigator.share) {
-        navigator.share({
-            title: `اختبار ${currentQuiz.name}`,
-            text: `جاوب على اختباري: ${currentQuiz.name}`,
-            url: shareUrl
-        }).catch(() => copyShareLink(shareUrl));
-    } else {
-        copyShareLink(shareUrl);
-    }
+  const quizId=typeof id==="string"?id:id.id;
+  localStorage.setItem("owner_"+quizId,token);
+
+  let list=JSON.parse(localStorage.getItem("myQuizzes")||"[]");
+  list.push({id:quizId,title});
+  localStorage.setItem("myQuizzes",JSON.stringify(list));
+
+  const link=location.origin+location.pathname+"#quiz="+quizId;
+  app.innerHTML=`
+   <div class="card">
+    <h2>تم إنشاء الاختبار بنجاح 🎉</h2>
+    <p>رابط الاختبار:</p>
+    <input id="shareLink" readonly value="${link}">
+    <button onclick="copyLink()">نسخ الرابط</button>
+    <button onclick="shareLink()">مشاركة الاختبار</button>
+    <button class="secondary" onclick="showResults('${quizId}')">عرض النتائج</button>
+    <button class="secondary" onclick="home()">الرئيسية</button>
+   </div>`;
+ }catch(e){alert("حصل خطأ: "+e.message)}
 }
 
-function copyShareLink(url) {
-    const status = document.getElementById("shareStatus");
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(url).then(() => {
-            status.textContent = "تم نسخ الرابط! ابعته لأصحابك ✅";
-        }).catch(() => showLink(url));
-    } else {
-        showLink(url);
-    }
+function copyLink(){
+ const input=document.getElementById("shareLink");
+ input.select();
+ document.execCommand("copy");
+ alert("تم نسخ الرابط");
+}
+async function shareLink(){
+ const link=document.getElementById("shareLink").value;
+ if(navigator.share){
+  try{await navigator.share({title:"اعرفني",url:link})}catch(e){}
+ }else{
+  await navigator.clipboard.writeText(link);
+  alert("تم نسخ الرابط");
+ }
 }
 
-function showLink(url) {
-    const status = document.getElementById("shareStatus");
-    status.innerHTML = `انسخ الرابط التالي وابعته لأصحابك:<br><textarea id="shareUrl" rows="3" style="width:100%;margin-top:10px;padding:10px;direction:ltr"></textarea>`;
-    document.getElementById("shareUrl").value = url;
+async function openQuiz(id){
+ try{
+  const quiz=await rpc("get_public_quiz",{p_quiz_id:id});
+  const data=quiz;
+  app.innerHTML=`
+   <div class="card">
+    <h2>اختبار ${escapeHtml(data.title)}</h2>
+    <input id="participant" placeholder="اكتب اسمك">
+    <div id="quizQuestions"></div>
+    <button onclick="submitQuiz('${id}')">إرسال الإجابات</button>
+    <p id="quizMessage"></p>
+   </div>`;
+  window.currentQuiz=data;
+  const area=document.getElementById("quizQuestions");
+  data.questions.forEach((q,i)=>{
+   const div=document.createElement("div");
+   div.className="question";
+   div.innerHTML=`<h3>${i+1}. ${escapeHtml(q.title)}</h3>`+
+   q.options.map((option,j)=>`
+    <div class="option">
+     <input type="radio" name="answer${i}" value="${j}">
+     <span>${escapeHtml(option)}</span>
+    </div>`).join("");
+   area.appendChild(div);
+  });
+ }catch(e){app.innerHTML=`<div class="card">تعذر فتح الاختبار: ${escapeHtml(e.message)}</div>`}
 }
 
-function openSharedQuiz(encoded) {
-    let quiz;
-    try {
-        quiz = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(encoded)))));
-        if (!quiz.name || !Array.isArray(quiz.questions) || !quiz.questions.length) throw new Error("Invalid quiz");
-    } catch (e) {
-        document.querySelector("main").innerHTML = '<h1>الرابط غير صالح</h1><p class="description">اطلب من صاحب الاختبار إرسال رابط جديد.</p>';
-        return;
-    }
-
-    document.querySelector("main").innerHTML = `
-        <h1>اختبار <span style="color:#a18cff">${escapeHtml(quiz.name)}</span></h1>
-        <p class="description">جاوب على الأسئلة وشوف نتيجتك في النهاية!</p>
-        <div class="card" id="answerCard"></div>
-    `;
-
-    const card = document.getElementById("answerCard");
-    quiz.questions.forEach((q, index) => {
-        const section = document.createElement("div");
-        section.className = "question";
-        const label = document.createElement("label");
-        label.textContent = `${index + 1}. ${q.title}`;
-        section.appendChild(label);
-
-        q.options.forEach((option, optionIndex) => {
-            const choiceLabel = document.createElement("label");
-            choiceLabel.style.display = "flex";
-            choiceLabel.style.alignItems = "center";
-            choiceLabel.style.gap = "10px";
-            const radio = document.createElement("input");
-            radio.type = "radio";
-            radio.name = `answer-${index}`;
-            radio.value = String(optionIndex + 1);
-            radio.style.width = "auto";
-            choiceLabel.appendChild(radio);
-            choiceLabel.appendChild(document.createTextNode(option));
-            section.appendChild(choiceLabel);
-        });
-        card.appendChild(section);
-    });
-
-    const submit = document.createElement("button");
-    submit.textContent = "اعرف نتيجتي";
-    submit.onclick = () => {
-        let score = 0;
-        for (let i = 0; i < quiz.questions.length; i++) {
-            const chosen = card.querySelector(`input[name="answer-${i}"]:checked`);
-            if (!chosen) {
-                alert("جاوب على كل الأسئلة الأول.");
-                return;
-            }
-            if (Number(chosen.value) === Number(quiz.questions[i].correct)) score++;
-        }
-        card.innerHTML = `
-            <h2>خلصت الاختبار 🎉</h2>
-            <p>نتيجتك: ${score} من ${quiz.questions.length}</p>
-            <p>شكراً لمشاركتك!</p>
-            <p class="small-note">النتيجة ظاهرة عندك فقط. صاحب الاختبار لن يستلمها تلقائياً في النسخة دي.</p>
-        `;
-    };
-    card.appendChild(submit);
+async function submitQuiz(id){
+ try{
+  const name=document.getElementById("participant").value.trim();
+  if(!name)return alert("اكتب اسمك");
+  const answers=[];
+  for(let i=0;i<window.currentQuiz.questions.length;i++){
+   const selected=document.querySelector(`input[name="answer${i}"]:checked`);
+   if(!selected)return alert("جاوب على كل الأسئلة");
+   answers.push(Number(selected.value));
+  }
+  const result=await rpc("submit_quiz_response",{
+   p_quiz_id:id,
+   p_participant_name:name,
+   p_answers:answers
+  });
+  app.innerHTML=`
+   <div class="card">
+    <h2>تم إرسال إجاباتك 🎉</h2>
+    <h1>${result.score} / ${result.total}</h1>
+    <p>شكراً لمشاركتك!</p>
+    <button onclick="home()">الرئيسية</button>
+   </div>`;
+ }catch(e){alert("حصل خطأ: "+e.message)}
 }
 
-function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    })[char]);
+async function showResults(id){
+ try{
+  const token=localStorage.getItem("owner_"+id);
+  if(!token)return alert("رمز صاحب الاختبار غير موجود على هذا الجهاز");
+  const results=await rpc("get_owner_results",{
+   p_quiz_id:id,
+   p_owner_token:token
+  });
+  app.innerHTML=`
+   <div class="card">
+    <h2>نتائج الاختبار</h2>
+    <p>عدد المشاركات: ${results.length}</p>
+    <div id="results"></div>
+    <button onclick="home()">رجوع</button>
+   </div>`;
+  const area=document.getElementById("results");
+  if(!results.length)area.innerHTML="<p>لسه محدش شارك في الاختبار.</p>";
+  results.forEach(r=>{
+   const div=document.createElement("div");
+   div.className="result";
+   div.innerHTML=`<strong>${escapeHtml(r.participant_name)}</strong>
+   <p>النتيجة: ${r.score} من ${r.total_questions}</p>
+   <p class="small">${new Date(r.created_at).toLocaleString("ar-EG")}</p>`;
+   area.appendChild(div);
+  });
+ }catch(e){alert("تعذر عرض النتائج: "+e.message)}
 }
 
-const sharedMatch = location.hash.match(/^#quiz=(.+)$/);
-if (sharedMatch) {
-    openSharedQuiz(sharedMatch[1]);
-} else {
-    addQuestion();
+function showMyQuizzes(){
+ const list=JSON.parse(localStorage.getItem("myQuizzes")||"[]");
+ const area=document.getElementById("myQuizzes");
+ if(!list.length){area.innerHTML="<p class='small'>لم تنشئ اختبارات بعد.</p>";return}
+ area.innerHTML="";
+ list.forEach(q=>{
+  const div=document.createElement("div");
+  div.className="result";
+  const title=document.createElement("strong");
+  title.textContent=q.title;
+  const btn=document.createElement("button");
+  btn.textContent="عرض النتائج";
+  btn.onclick=()=>showResults(q.id);
+  div.append(title,btn);
+  area.appendChild(div);
+ });
 }
+
+function escapeHtml(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function route(){
+ const hash=location.hash;
+ if(hash.startsWith("#quiz=")){
+  const id=hash.slice(6);
+  if(id)openQuiz(id);else home();
+ }else{
+  home();
+ }
+}
+window.addEventListener("hashchange",route);
+route();
 </script>
 </body>
 </html>
