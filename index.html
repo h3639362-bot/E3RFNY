@@ -4,46 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E3RFNY | اعرفني</title>
+<meta name="description" content="اعمل اختبار عن نفسك وشاركه مع أصحابك واكتشف مين يعرفك أكتر.">
+
 <style>
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
  margin:0;background:#100d1c;color:#fff;
- font-family:Arial,sans-serif;padding:20px;
+ font-family:Arial,sans-serif;padding:16px;line-height:1.7;
 }
-.container{max-width:700px;margin:30px auto}
+.container{max-width:850px;margin:20px auto}
 .card{
  background:#1d1830;border:1px solid #393052;
  border-radius:18px;padding:22px;margin-bottom:18px;
 }
 h1{text-align:center;color:#c6a7ff}
 h2{color:#d8c5ff}
-input,textarea,button{
+input,textarea,button,select{
  width:100%;padding:13px;margin:8px 0;
- border-radius:10px;border:1px solid #554773;
- font-size:16px;
+ border-radius:10px;border:1px solid #554773;font-size:16px;
 }
-input,textarea{background:#110e1c;color:white}
+input,textarea,select{background:#110e1c;color:white}
 button{
  background:#8055c9;color:white;border:0;
- cursor:pointer;font-weight:bold;
+ cursor:pointer;font-weight:bold;transition:.2s;
 }
+button:hover{background:#956bd9}
 button.secondary{background:#39304e}
 .option{display:flex;gap:8px;align-items:center}
 .option input{width:auto}
 .question{border-top:1px solid #44395b;padding-top:15px;margin-top:15px}
 .small{color:#c2b8d3;font-size:14px}
-.hidden{display:none}
+footer{text-align:center;padding:25px;color:#aaa}
+footer a{color:#c6a7ff;text-decoration:none;margin:0 5px}
+footer a:hover{text-decoration:underline}
 .result{background:#29213d;padding:12px;border-radius:10px;margin:10px 0}
+
+.topbar{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;padding:15px 20px;margin-bottom:20px;
+ background:#1d1830;border:1px solid #393052;border-radius:16px;
+}
+.logo{font-size:23px;font-weight:bold;color:#c6a7ff}
+.topbar a{color:#fff;text-decoration:none;font-size:14px}
+
+.hero{
+ text-align:center;padding:45px 22px;
+ border:1px solid #554078;border-radius:22px;
+ background:linear-gradient(140deg,#30204d,#19142a 65%,#24183c);
+ margin-bottom:20px;
+}
+.hero h1{font-size:34px;margin:0 0 12px}
+.hero p{color:#ddd2ef;max-width:570px;margin:0 auto 20px}
+.hero button{max-width:260px;padding:15px}
+.hero-tag{
+ display:inline-block;background:#493365;color:#e2d2ff;
+ padding:6px 14px;border-radius:30px;font-size:13px;margin-bottom:15px;
+}
+.section-title{text-align:center;margin:30px 0 18px}
+.features{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:12px;margin-bottom:20px;
+}
+.feature{
+ background:#1d1830;border:1px solid #393052;
+ border-radius:15px;padding:17px;text-align:center;
+}
+.feature .emoji{font-size:28px}
+.feature h3{color:#d8c5ff;font-size:17px}
+.feature p{font-size:13px;color:#c2b8d3;margin:0}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.step{background:#29213d;padding:15px;border-radius:13px;text-align:center}
+.step strong{color:#c6a7ff;font-size:22px}
+.step p{font-size:13px;color:#ddd;margin:5px 0 0}
+
+/* أماكن الإعلانات */
+.ad-slot{
+ width:100%;
+ min-height:100px;
+ margin:20px auto;
+ padding:18px;
+ border:1px dashed #554773;
+ border-radius:14px;
+ background:#171225;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ color:#a99bbd;
+}
+.ad-slot strong{
+ color:#c6a7ff;
+ font-size:13px;
+}
+.ad-slot span{
+ font-size:12px;
+ margin-top:5px;
+}
+
+@media(max-width:600px){
+ body{padding:10px}
+ .container{margin:10px auto}
+ .hero{padding:32px 16px}
+ .hero h1{font-size:27px}
+ .features,.steps{grid-template-columns:1fr}
+ .topbar{padding:12px}
+ .ad-slot{min-height:90px}
+}
 </style>
 </head>
+
 <body>
 <div class="container">
- <div class="card">
-  <h1>اعرفني E3RFNY</h1>
-  <p class="small" style="text-align:center">اعمل اختبار عن نفسك وشارك الرابط مع أصحابك!</p>
- </div>
 
- <main id="app"></main>
+<header class="topbar">
+ <div class="logo">E3RFNY</div>
+ <a href="#app">ابدأ اختبارك 🎯</a>
+</header>
+
+<section class="hero">
+ <span class="hero-tag">اختبر أصحابك واكتشف مين يعرفك أكتر</span>
+ <h1>مين يعرفك بجد؟ 👀</h1>
+ <p>
+  اعمل اختبار عن نفسك، اكتب أسئلة عن شخصيتك واهتماماتك،
+  وشارك الرابط مع أصحابك وشوف مين يعرفك أكتر!
+ </p>
+ <button onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">
+  ابدأ الآن 🚀
+ </button>
+</section>
+
+<!-- مساحة الإعلان الأولى -->
+<div class="ad-slot">
+ <strong>مساحة إعلانية</strong>
+ <span>سيتم تفعيل الإعلانات هنا لاحقاً</span>
+</div>
+
+<h2 class="section-title">ليه تستخدم E3RFNY؟</h2>
+
+<section class="features">
+ <div class="feature">
+  <div class="emoji">🎯</div>
+  <h3>اختبارك بطريقتك</h3>
+  <p>اكتب أسئلتك واختار الإجابات بنفسك.</p>
+ </div>
+ <div class="feature">
+  <div class="emoji">🔗</div>
+  <h3>مشاركة سهلة</h3>
+  <p>شارك الاختبار مع أصحابك عن طريق رابط.</p>
+ </div>
+ <div class="feature">
+  <div class="emoji">🏆</div>
+  <h3>اعرف النتائج</h3>
+  <p>شوف إجابات أصحابك ونتائجهم.</p>
+ </div>
+</section>
+
+<div class="card">
+ <h2 class="section-title">تستخدم الموقع إزاي؟</h2>
+ <div class="steps">
+  <div class="step"><strong>1</strong><p>اكتب اسمك وأسئلتك.</p></div>
+  <div class="step"><strong>2</strong><p>أنشئ الاختبار وانسخ الرابط.</p></div>
+  <div class="step"><strong>3</strong><p>شارك الرابط وشوف النتائج.</p></div>
+ </div>
+</div>
+
+<!-- مساحة الإعلان الثانية -->
+<div class="ad-slot">
+ <strong>مساحة إعلانية</strong>
+ <span>سيتم تفعيل الإعلانات هنا لاحقاً</span>
+</div>
+
+<main id="app"></main>
+
+<!-- مساحة الإعلان الثالثة -->
+<div class="ad-slot">
+ <strong>مساحة إعلانية</strong>
+ <span>سيتم تفعيل الإعلانات هنا لاحقاً</span>
+</div>
+
+<footer>
+ <a href="about.html">من نحن</a>
+ <span> | </span>
+ <a href="privacy.html">سياسة الخصوصية</a>
+ <span> | </span>
+ <a href="contact.html">اتصل بنا</a>
+ <span> | </span>
+ <a href="index.html">الرئيسية</a>
+ <p class="small">© 2026 E3RFNY. جميع الحقوق محفوظة.</p>
+</footer>
+
 </div>
 
 <script>
@@ -78,7 +229,6 @@ function home(){
   <div id="questions"></div>
   <button onclick="addQuestion()">+ إضافة سؤال</button>
   <button onclick="createQuiz()">إنشاء الاختبار ومشاركة الرابط</button>
-  <p id="message" class="small"></p>
  </div>
  <div class="card">
   <h2>اختباراتي</h2>
@@ -94,7 +244,6 @@ function addQuestion(){
  questions.push({title:"",options:["","","",""],correct:0});
  const div=document.createElement("div");
  div.className="question";
- div.id="q"+id;
  div.innerHTML=`
   <h3>السؤال ${id+1}</h3>
   <input placeholder="اكتب السؤال" oninput="questions[${id}].title=this.value">
@@ -117,6 +266,8 @@ async function createQuiz(){
   const title=document.getElementById("ownerName").value.trim();
   if(!title) return alert("اكتب اسمك الأول");
   if(questions.length===0) return alert("أضف سؤالًا");
+  if(questions.length>30) return alert("الحد الأقصى 30 سؤالًا");
+
   for(const q of questions){
    if(!q.title.trim() || q.options.some(x=>!x.trim()))
     return alert("اكمل السؤال وكل الاختيارات");
@@ -141,7 +292,7 @@ async function createQuiz(){
    <div class="card">
     <h2>تم إنشاء الاختبار بنجاح 🎉</h2>
     <p>رابط الاختبار:</p>
-    <input id="shareLink" readonly value="${link}">
+    <input id="shareLink" readonly value="${escapeHtml(link)}">
     <button onclick="copyLink()">نسخ الرابط</button>
     <button onclick="shareLink()">مشاركة الاختبار</button>
     <button class="secondary" onclick="showResults('${quizId}')">عرض النتائج</button>
@@ -156,10 +307,14 @@ function copyLink(){
  document.execCommand("copy");
  alert("تم نسخ الرابط");
 }
+
 async function shareLink(){
  const link=document.getElementById("shareLink").value;
+
  if(navigator.share){
-  try{await navigator.share({title:"اعرفني",url:link})}catch(e){}
+  try{
+   await navigator.share({title:"اعرفني",url:link});
+  }catch(e){}
  }else{
   await navigator.clipboard.writeText(link);
   alert("تم نسخ الرابط");
@@ -169,18 +324,17 @@ async function shareLink(){
 async function openQuiz(id){
  try{
   const quiz=await rpc("get_public_quiz",{p_quiz_id:id});
-  const data=quiz;
+  window.currentQuiz=quiz;
   app.innerHTML=`
    <div class="card">
-    <h2>اختبار ${escapeHtml(data.title)}</h2>
+    <h2>اختبار ${escapeHtml(quiz.title)}</h2>
     <input id="participant" placeholder="اكتب اسمك">
     <div id="quizQuestions"></div>
     <button onclick="submitQuiz('${id}')">إرسال الإجابات</button>
-    <p id="quizMessage"></p>
    </div>`;
-  window.currentQuiz=data;
+
   const area=document.getElementById("quizQuestions");
-  data.questions.forEach((q,i)=>{
+  quiz.questions.forEach((q,i)=>{
    const div=document.createElement("div");
    div.className="question";
    div.innerHTML=`<h3>${i+1}. ${escapeHtml(q.title)}</h3>`+
@@ -191,24 +345,29 @@ async function openQuiz(id){
     </div>`).join("");
    area.appendChild(div);
   });
- }catch(e){app.innerHTML=`<div class="card">تعذر فتح الاختبار: ${escapeHtml(e.message)}</div>`}
+ }catch(e){
+  app.innerHTML=`<div class="card">تعذر فتح الاختبار: ${escapeHtml(e.message)}</div>`;
+ }
 }
 
 async function submitQuiz(id){
  try{
   const name=document.getElementById("participant").value.trim();
   if(!name)return alert("اكتب اسمك");
+
   const answers=[];
   for(let i=0;i<window.currentQuiz.questions.length;i++){
    const selected=document.querySelector(`input[name="answer${i}"]:checked`);
    if(!selected)return alert("جاوب على كل الأسئلة");
    answers.push(Number(selected.value));
   }
+
   const result=await rpc("submit_quiz_response",{
    p_quiz_id:id,
    p_participant_name:name,
    p_answers:answers
   });
+
   app.innerHTML=`
    <div class="card">
     <h2>تم إرسال إجاباتك 🎉</h2>
@@ -223,10 +382,12 @@ async function showResults(id){
  try{
   const token=localStorage.getItem("owner_"+id);
   if(!token)return alert("رمز صاحب الاختبار غير موجود على هذا الجهاز");
+
   const results=await rpc("get_owner_results",{
    p_quiz_id:id,
    p_owner_token:token
   });
+
   app.innerHTML=`
    <div class="card">
     <h2>نتائج الاختبار</h2>
@@ -234,8 +395,10 @@ async function showResults(id){
     <div id="results"></div>
     <button onclick="home()">رجوع</button>
    </div>`;
+
   const area=document.getElementById("results");
   if(!results.length)area.innerHTML="<p>لسه محدش شارك في الاختبار.</p>";
+
   results.forEach(r=>{
    const div=document.createElement("div");
    div.className="result";
@@ -250,7 +413,10 @@ async function showResults(id){
 function showMyQuizzes(){
  const list=JSON.parse(localStorage.getItem("myQuizzes")||"[]");
  const area=document.getElementById("myQuizzes");
- if(!list.length){area.innerHTML="<p class='small'>لم تنشئ اختبارات بعد.</p>";return}
+ if(!list.length){
+  area.innerHTML="<p class='small'>لم تنشئ اختبارات بعد.</p>";
+  return;
+ }
  area.innerHTML="";
  list.forEach(q=>{
   const div=document.createElement("div");
